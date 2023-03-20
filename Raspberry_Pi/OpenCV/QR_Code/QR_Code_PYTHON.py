@@ -3,7 +3,7 @@ import cv2
 from pyzbar.pyzbar import decode
 
 # 加载图像
-img = cv2.imread('qrcode.png', 0)
+img = cv2.imread('test.png', 0)
 
 # 解码二维码
 decoded = decode(img)

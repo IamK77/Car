@@ -1,0 +1,7 @@
+# ignore all files with the extension .db
+*.db
+
+
+# ignore the __pycache__ directory
+__pycache__/
+.vscode/
