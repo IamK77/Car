@@ -6,3 +6,4 @@
 # ignore the __pycache__ directory
 __pycache__/
 .vscode/
+.vs/
