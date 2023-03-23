@@ -13,7 +13,7 @@
  *        FA使用dirc 0  FB 1  BA 2  BB 3
  *TODO: 整合特殊方向的速度数组
  */
-
+// TODO HIGH和LOW放入数组为非法 1. 在main分支中采用笨办法确保正常运行，在dev中计划采用指针的办法
 #define BAIN1 34
 #define BAIN2 32
 #define BBIN1 40
