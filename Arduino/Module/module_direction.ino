@@ -13,7 +13,6 @@
  *        FA使用dirc 0  FB 1  BA 2  BB 3
  *TODO: 整合特殊方向的速度数组
  */
-// TODO HIGH和LOW放入数组为非法 1. 在main分支中采用笨办法确保正常运行，在dev中计划采用指针的办法
 #define BAIN1 34
 #define BAIN2 32
 #define BBIN1 40
@@ -29,18 +28,52 @@
 #define FPWMB 6
 #define FSTBY 26
 
-int FORWARD[] = {HIGH, LOW};
-int BACKWARD[] = {LOW, HIGH};
+#define FORWARD {HIGH, LOW}  //C语言的常量可以放进数组吗？ 不能 那应该怎么办呢？ 1. 在main分支中采用笨办法确保正常运行，在dev中计划采用指针的办法 2. 采用宏定义 3. 采用枚举 4. 采用结构体 5. 采用全局变量 6. 采用函数 7. 采用类
+#define BACKWARD {LOW, HIGH}
+/*
+  * 1. 采用宏定义
+  * 2. 采用枚举
+  * 3. 采用结构体
+  * 4. 采用全局变量
+  * 5. 采用函数
+  * 6. 采用类
+  * 分别举个例子
+  * 1. 采用宏定义
+  * #define FORWARD {HIGH, LOW} 牛逼啊，这样就可以直接传入数组了 
+  * #define BACKWARD {LOW, HIGH}
+  * 2. 采用枚举
+  * enum direction {FORWARD, BACKWARD};
+  * 3. 采用结构体
+  * struct direction {
+  *  int forward[2] = {HIGH, LOW};
+  * int backward[2] = {LOW, HIGH};
+  * };
+  * 4. 采用全局变量
+  * int forward[2] = {HIGH, LOW};
+  * int backward[2] = {LOW, HIGH};
+  * 5. 采用函数
+  * int *forward() {
+  * int forward[2] = {HIGH, LOW};
+  * return forward;
+  * }
+  * 
+  * 
+  * 
+  * 
+  * 
+  * 
+  * 
+*/
 // {左前 右前 右后 左后}
 // 定义方向数组
-int forward[2][4] = {FORWARD, FORWARD, FORWARD, FORWARD}; // 前进
-int backward[2][4] = {BACKWARD, BACKWARD, BACKWARD, BACKWARD}; // 后退
-int left[2][4] = {FORWARD, BACKWARD, FORWARD, BACKWARD}; // 左转
-int right[2][4] = {BACKWARD, FORWARD, BACKWARD, FORWARD}; // 右转
-int forward_left[2][4] = {FORWARD, FORWARD, FORWARD, FORWARD}; // 左前方
-int forward_right[2][4] = {FORWARD, FORWARD, FORWARD, BACKWARD}; // 右前方
-int backward_left[2][4] = {BACKWARD, BACKWARD, BACKWARD, BACKWARD}; // 左后方
-int backward_right[2][4] = {BACKWARD, BACKWARD, BACKWARD, BACKWARD}; // 右后方
+#define forward {FORWARD, FORWARD, FORWARD, FORWARD} // 前进
+#define backward {BACKWARD, BACKWARD, BACKWARD, BACKWARD} // 后退
+#define left {FORWARD, BACKWARD, FORWARD, BACKWARD} // 左转
+#define right {BACKWARD, FORWARD, BACKWARD, FORWARD} // 右转
+#define forward_left {FORWARD, FORWARD, FORWARD, FORWARD} // 左前方
+#define forward_right {FORWARD, FORWARD, FORWARD, BACKWARD} // 右前方
+#define backward_left {BACKWARD, BACKWARD, BACKWARD, BACKWARD} // 左后方
+#define backward_right {BACKWARD, BACKWARD, BACKWARD, BACKWARD} // 右后方
 int speed[] = {255, 255, 255, 255};
 int speed_A[] = {255, 0, 255, 0};    //for forward_left and backward_right
 int speed_B[] = {0, 255, 0, 255};    //for forward_right and backward_left
