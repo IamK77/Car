@@ -14,7 +14,7 @@
  *TODO: 整合特殊方向的速度数组
  */
 
-#define FAIN1 24   //左上电机a
+#define FAIN1 24   //左上电机a1111
 #define FAIN2 22
 #define FPWMA 2
 #define FSTBY 3
