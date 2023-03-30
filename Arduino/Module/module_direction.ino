@@ -54,7 +54,7 @@ Serial.begin(9600);
   pinMode(BPWMB,OUTPUT);//D电机的PWM
   
   //初始化tb6612电机的驱动模块
-   digitalWrite(FAIN1, 1);
+  digitalWrite(FAIN1, 1);
   digitalWrite(FAIN2, 0);
   digitalWrite(FBIN1, 1);
   digitalWrite(FBIN2, 0);
@@ -173,5 +173,4 @@ void loop()
   delay(500);
   LeftLine();
   delay(500);
-  
 }
