@@ -28,56 +28,22 @@
 #define FPWMB 6
 #define FSTBY 26
 
-#define FORWARD {HIGH, LOW}  //C语言的常量可以放进数组吗？ 不能 那应该怎么办呢？ 1. 在main分支中采用笨办法确保正常运行，在dev中计划采用指针的办法 2. 采用宏定义 3. 采用枚举 4. 采用结构体 5. 采用全局变量 6. 采用函数 7. 采用类
-#define BACKWARD {LOW, HIGH}
-/*
-  * 1. 采用宏定义
-  * 2. 采用枚举
-  * 3. 采用结构体
-  * 4. 采用全局变量
-  * 5. 采用函数
-  * 6. 采用类
-  * 分别举个例子
-  * 1. 采用宏定义
-  * #define FORWARD {HIGH, LOW} 牛逼啊，这样就可以直接传入数组了 
-  * #define BACKWARD {LOW, HIGH}
-  * 2. 采用枚举
-  * enum direction {FORWARD, BACKWARD};
-  * 3. 采用结构体
-  * struct direction {
-  *  int forward[2] = {HIGH, LOW};
-  * int backward[2] = {LOW, HIGH};
-  * };
-  * 4. 采用全局变量
-  * int forward[2] = {HIGH, LOW};
-  * int backward[2] = {LOW, HIGH};
-  * 5. 采用函数
-  * int *forward() {
-  * int forward[2] = {HIGH, LOW};
-  * return forward;
-  * }
-  * 
-  * 
-  * 
-  * 
-  * 
-  * 
-  * 
-*/
+#define FORWARD {1, 0}
+#define BACKWARD {0, 1}
 // {左前 右前 右后 左后}
 // 定义方向数组
-#define forward {FORWARD, FORWARD, FORWARD, FORWARD} // 前进
-#define backward {BACKWARD, BACKWARD, BACKWARD, BACKWARD} // 后退
-#define left {FORWARD, BACKWARD, FORWARD, BACKWARD} // 左转
-#define right {BACKWARD, FORWARD, BACKWARD, FORWARD} // 右转
-#define forward_left {FORWARD, FORWARD, FORWARD, FORWARD} // 左前方
-#define forward_right {FORWARD, FORWARD, FORWARD, BACKWARD} // 右前方
-#define backward_left {BACKWARD, BACKWARD, BACKWARD, BACKWARD} // 左后方
-#define backward_right {BACKWARD, BACKWARD, BACKWARD, BACKWARD} // 右后方
-int speed[] = {255, 255, 255, 255};
-int speed_A[] = {255, 0, 255, 0};    //for forward_left and backward_right
-int speed_B[] = {0, 255, 0, 255};    //for forward_right and backward_left
-
+int forward[4][2] {FORWARD, FORWARD, FORWARD, FORWARD}; // 前进
+int backward[4][2] {BACKWARD, BACKWARD, BACKWARD, BACKWARD}; // 后退
+int left[4][2] {FORWARD, BACKWARD, FORWARD, BACKWARD}; // 左转
+int right[4][2] {BACKWARD, FORWARD, BACKWARD, FORWARD}; // 右转
+int forward_left[4][2] {FORWARD, FORWARD, FORWARD, FORWARD}; // 左前方
+int forward_right[4][2] {FORWARD, FORWARD, FORWARD, BACKWARD}; // 右前方
+int backward_left[4][2] {BACKWARD, BACKWARD, BACKWARD, BACKWARD}; // 左后方
+int backward_right[4][2] {BACKWARD, BACKWARD, BACKWARD, BACKWARD}; // 右后方
+int speed[4] = {255, 255, 255, 255};
+int speed_A[4] = {255, 0, 255, 0};    //for forward_left and backward_right
+int speed_B[4] = {0, 255, 0, 255};    //for forward_right and backward_left
+// 
 void setup() {
   int pins[] = {BAIN1, BAIN2, BBIN1, BBIN2, BPWMA, BPWMB, BSTBY, FAIN1, FAIN2, FBIN1, FBIN2, FPWMA, FPWMB, FSTBY};
   int pins_size = sizeof(pins) / sizeof(pins[0]);
@@ -86,21 +52,21 @@ void setup() {
   }
 }
 
-void move(int duration, int speed[], int direction[][4]) {
+void move(int duration, int speed[4], int direction[4][2]) {
   digitalWrite(BAIN1, direction[2][0]);
   digitalWrite(BAIN2, direction[2][1]);
   digitalWrite(BBIN1, direction[3][0]);
   digitalWrite(BBIN2, direction[3][1]);
   analogWrite(BPWMA, speed[2]); //设置引脚BPWMA的PWM输出为speed[2]
   analogWrite(BPWMB, speed[3]); //设置引脚BPWMB的PWM输出为speed[3]
-  digitalWrite(BSTBY, HIGH); //设置引脚BSTBY为高电平
+  digitalWrite(BSTBY, 1); //设置引脚BSTBY为高电平
   digitalWrite(FAIN1, direction[0][0]);
   digitalWrite(FAIN2, direction[0][1]);
   digitalWrite(FBIN1, direction[1][0]);
   digitalWrite(FBIN2, direction[1][1]);
   analogWrite(FPWMA, speed[0]); //设置引脚FPWMA的PWM输出为speed[0]
   analogWrite(FPWMB, speed[1]); //设置引脚FPWMB的PWM输出为speed[1]
-  digitalWrite(FSTBY, HIGH); //设置引脚FSTBY为高电平
+  digitalWrite(FSTBY, 1); //设置引脚FSTBY为高电平
   delay(duration); //延时duration毫秒
 }
 
@@ -116,23 +82,3 @@ void loop() {
   // direction[1] = LEFT;
   // move(1000, speed, direction); //向右移动1000毫秒，速度为255
 }
-
-/*    dev func
-void move(int duration, int speed[], int fa1, int fa2, int fb1, int fb2, int ba1, int ba2, int bb1, int bb2) {
-  digitalWrite(BAIN1, ba1); 
-  digitalWrite(BAIN2, ba2); 
-  digitalWrite(BBIN1, bb1); 
-  digitalWrite(BBIN2, bb2); 
-  analogWrite(BPWMA, speed[2]); 
-  analogWrite(BPWMB, speed[3]); 
-  digitalWrite(BSTBY, HIGH); 
-  digitalWrite(FAIN1, fa1); 
-  digitalWrite(FAIN2, fa2); 
-  digitalWrite(FBIN1, fb1); 
-  digitalWrite(FBIN2, fb2); 
-  analogWrite(FPWMA, speed[0]); 
-  analogWrite(FPWMB, speed[1]); 
-  digitalWrite(FSTBY, HIGH); 
-  delay(duration); 
-}
-*/
