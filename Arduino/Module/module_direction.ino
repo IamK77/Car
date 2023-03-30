@@ -121,56 +121,56 @@ void SetPWM(int motor, int pwm){
   }
 }
 void up(){
-  SetPWM(1,255);
-  SetPWM(2,255);
-  SetPWM(3,255);
-  SetPWM(4,255);
+  SetPWM(1,-100);  //右前
+  SetPWM(2,100);   //左前
+  SetPWM(3,-100);   //左后
+  SetPWM(4,100);   //右后
 }
 void back(){
-  SetPWM(1,-255);
-  SetPWM(2,-255);
-  SetPWM(3,-255);
-  SetPWM(4,-255);
+  SetPWM(1,100);
+  SetPWM(2,-100);
+  SetPWM(3,100);
+  SetPWM(4,-100);
 }
 void TurnLeft(){
   SetPWM(1,-128);
-  SetPWM(1,-128);
-  SetPWM(1,128);
-  SetPWM(1,128);
+  SetPWM(2,-128);
+  SetPWM(3,128);
+  SetPWM(4,128);
 }
 void TurnRight(){
   SetPWM(1,128);
-  SetPWM(1,128);
-  SetPWM(1,-128);
-  SetPWM(1,-128);
+  SetPWM(2,128);
+  SetPWM(3,-128);
+  SetPWM(4,-128);
 }
 void RightLine(){
    SetPWM(1,-128);
-   SetPWM(1,128);
-   SetPWM(1,128);
-   SetPWM(1,-128);
+   SetPWM(2,128);
+   SetPWM(3,128);
+   SetPWM(4,-128);
 }
 void LeftLine(){
-   SetPWM(1,128);
    SetPWM(1,-128);
-   SetPWM(1,-128);
-   SetPWM(1,128);
+   SetPWM(2,-128);
+   SetPWM(3,128);
+   SetPWM(4,128);
 }
 void loop() 
 {
-  V=analogRead(Voltage); //读取模拟引脚A0模拟量
-  Serial.print(V*0.05371);  //对模拟量转换并通过串口输出
-  Serial.println("V");
+  // V=analogRead(Voltage); //读取模拟引脚A0模拟量
+  // Serial.print(V*0.05371);  //对模拟量转换并通过串口输出
+  // Serial.println("V");
   up();
-  delay(500);
-  back();
-  delay(500);
-  TurnLeft();
-  delay(500);
-  TurnRight();
-  delay(500);
-  RightLine();
-  delay(500);
-  LeftLine();
-  delay(500);
+  // delay(500);
+  // back();
+  // delay(500);
+  // TurnLeft();
+  // delay(500);
+  // TurnRight();
+  // delay(500);
+  // RightLine();
+  // delay(500);
+  // LeftLine();
+  // delay(500);
 }
