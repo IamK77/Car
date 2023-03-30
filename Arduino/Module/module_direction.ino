@@ -146,8 +146,8 @@ void TurnRight(){
 }
 void RightLine(){
    SetPWM(1,-128);
-   SetPWM(2,128);
-   SetPWM(3,128);
+   SetPWM(2, 128);
+   SetPWM(3, 128);
    SetPWM(4,-128);
 }
 void LeftLine(){
