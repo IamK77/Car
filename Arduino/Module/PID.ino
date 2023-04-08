@@ -13,9 +13,8 @@
  *        FA使用dirc 0  FB 1  BA 2  BB 3
  *TODO: 整合特殊方向的速度数组
  */
-// 定义霍尔编码器的引脚
-// #define encoder_A 2 // 中断引脚0
-// #define encoder_B 3 // 中断引脚1
+
+// TODO AB电机是反的，记得改
 
 #define FAIN1 24   //右前电机a
 #define FAIN2 22
@@ -42,7 +41,6 @@
 #define BPWMB 7
 #define BB_A 35 
 #define BB_B 37 
-// AB电机是反的，记得改
 
 #define Voltage A0 //使用模拟引脚
 
@@ -73,15 +71,34 @@ struct encoder_val encoder_value;
 long currentMillis = 0;
 long previousMillis = 0;
 
-// 定义用于存储测量速度和PWM输出的变量
-int rpm = 0;
-int pwm = 0;
+// 用struct定义用于PWM输出的变量
+struct pwm_val {
+  int FA_pwm = 0;
+  int FB_pwm = 0;
+  int BA_pwm = 0;
+  int BB_pwm = 0;
+};
 
 // 定义用于存储PID控制器的误差和输出的变量
-float error = 0;
-float error1 = 0;
-float error2 = 0;
-float PwmControl = 0;
+struct error {
+  float FA_error = 0;
+  float FA_error1 = 0;
+  float FA_error2 = 0;
+  float FA_PwmControl = 0;
+  float FB_error = 0;
+  float FB_error1 = 0;
+  float FB_error2 = 0;
+  float FB_PwmControl = 0;
+  float BA_error = 0;
+  float BA_error1 = 0;
+  float BA_error2 = 0;
+  float BA_PwmControl = 0;
+  float BB_error = 0;
+  float BB_error1 = 0;
+  float BB_error2 = 0;
+  float BB_PwmControl = 0;
+};
+struct error error_value;
 
 struct rpm_val {
   float FA_rpm;
@@ -96,6 +113,7 @@ void setup() {
   
 
   // 设置编码器引脚为输入模式，并启用中断函数
+  // 优化不要这么多行
   pinMode(FA_A, INPUT_PULLUP);
   pinMode(FA_B, INPUT_PULLUP);
   pinMode(FB_A, INPUT_PULLUP);
@@ -117,13 +135,16 @@ void setup() {
   for (int i = 0; i < pins_size; i++) {
     pinMode(pins[i], OUTPUT); //设置引脚为输出
   }
-
 }
 
 void loop() {
+  // 获取当前时间
+  currentMillis = millis();
+  // 如果时间间隔达到设定值，则进行测速和控制
+  if (currentMillis - previousMillis > interval) {
+    struct pwm_val PID = PID_C();
+  }
   
-  
-
 }
 
 struct rpm_val rpm_get(){
@@ -135,64 +156,88 @@ struct rpm_val rpm_get(){
   return rpm_return;
 }
 
-void PID_C(){
-  // 获取当前时间
-  currentMillis = millis();
+struct pwm_val PID_C(){
+  struct pwm_val pwm_value;
+  // 更新上一次时间
+  previousMillis = currentMillis;
 
-  // 如果时间间隔达到设定值，则进行测速和控制
-  if (currentMillis - previousMillis > interval) {  //放到loop
+  // 计算测量速度，单位为转每分钟
+  struct rpm_val rpm;
+  rpm = rpm_get();
 
-    // 更新上一次时间
-    previousMillis = currentMillis;
+  // 计算误差，即目标速度与测量速度的差值
+  error_value.FA_error2 = error_value.FA_error1;
+  error_value.FA_error1 = error_value.FA_error;
+  error_value.FA_error = setRPM - rpm.FA_rpm;
+  error_value.FB_error2 = error_value.FB_error1;
+  error_value.FB_error1 = error_value.FB_error;
+  error_value.FB_error = setRPM - rpm.FB_rpm;
+  error_value.BA_error2 = error_value.BA_error1;
+  error_value.BA_error1 = error_value.BA_error;
+  error_value.BA_error = setRPM - rpm.BA_rpm;
+  error_value.BB_error2 = error_value.BB_error1;
+  error_value.BB_error1 = error_value.BB_error;
+  error_value.BB_error = setRPM - rpm.BB_rpm;
 
-    // 计算测量速度，单位为转每分钟
-    struct rpm_val rpm;
-    rpm = rpm_get();
+  // 计算PID控制器的输出，即PWM调节值
+  // PwmControl += Kp * (error - error1) + Ki * error + Kd * (error - 2 * error1 + error2);
+  error_value.FA_PwmControl += Kp * (error_value.FA_error - error_value.FA_error1) + Ki * error_value.FA_error + Kd * (error_value.FA_error - 2 * error_value.FA_error1 + error_value.FA_error2);
+  error_value.FB_PwmControl += Kp * (error_value.FB_error - error_value.FB_error1) + Ki * error_value.FB_error + Kd * (error_value.FB_error - 2 * error_value.FB_error1 + error_value.FB_error2);
+  error_value.BA_PwmControl += Kp * (error_value.BA_error - error_value.BA_error1) + Ki * error_value.BA_error + Kd * (error_value.BA_error - 2 * error_value.BA_error1 + error_value.BA_error2);
+  error_value.BB_PwmControl += Kp * (error_value.BB_error - error_value.BB_error1) + Ki * error_value.BB_error + Kd * (error_value.BB_error - 2 * error_value.BB_error1 + error_value.BB_error2);
 
-    // 计算误差，即目标速度与测量速度的差值
-    error2 = error1;
-    error1 = error;
-    error = setRPM - rpm;
 
-    // 计算PID控制器的输出，即PWM调节值
-    PwmControl += Kp * (error - error1) + Ki * error + Kd * (error - 2 * error1 + error2);
+  // 将PID控制器的输出映射到PWM范围内，即0-255之间
+  // pwm = map(PwmControl, -60, 60, -255, 255);
+  pwm_value.FA_pwm = map(error_value.FA_PwmControl, -60, 60, -255, 255);
+  pwm_value.FB_pwm = map(error_value.FB_PwmControl, -60, 60, -255, 255);
+  pwm_value.BA_pwm = map(error_value.BA_PwmControl, -60, 60, -255, 255);
+  pwm_value.BB_pwm = map(error_value.BB_PwmControl, -60, 60, -255, 255);
 
-    // 将PID控制器的输出映射到PWM范围内，即0-255之间
-    pwm = map(PwmControl, -60, 60, -255, 255);
 
-    // 如果PWM值超出范围，则限制在范围内
-    if (pwm > 255) {
-      pwm = 255;
-    }
-    if (pwm < -255) {
-      pwm = -255;
-    }
-
-    // // 如果PWM值为正，则设置电机正转，否则设置电机反转
-    // if (pwm > 0) {
-    //   digitalWrite(in3, HIGH);
-    //   digitalWrite(in4, LOW);
-    //   analogWrite(enB, pwm); // 输出PWM值给电机驱动
-    //   } else {
-    //   digitalWrite(in3, LOW);
-    //   digitalWrite(in4, HIGH);
-    //   analogWrite(enB, -pwm); // 输出PWM值给电机驱动
-    // }
-
-    // 重置编码器计数，为下一次测量做准备
-    encoderCount = 0;
-
-    // 在串口监视器上显示目标速度，测量速度和PWM值
-    Serial.print("Set RPM: ");
-    Serial.print(setRPM);
-    Serial.print('\t');
-    Serial.print("Measured RPM: ");
-    Serial.print(rpm);
-    Serial.print('\t');
-    Serial.print("Current PWM: ");
-    Serial.println(pwm);
-
+  // 如果PWM值超出范围，则限制在范围内
+  if (pwm_value.FA_pwm > 255) {
+    pwm_value.FA_pwm = 255;
   }
+  if (pwm_value.FA_pwm < -255) {
+    pwm_value.FA_pwm = -255;
+  }
+  if (pwm_value.FB_pwm > 255) {
+    pwm_value.FB_pwm = 255;
+  }
+  if (pwm_value.FB_pwm < -255) {
+    pwm_value.FB_pwm = -255;
+  }
+  if (pwm_value.BA_pwm > 255) {
+    pwm_value.BA_pwm = 255;
+  }
+  if (pwm_value.BA_pwm < -255) {
+    pwm_value.BA_pwm = -255;
+  }
+  if (pwm_value.BB_pwm > 255) {
+    pwm_value.BB_pwm = 255;
+  }
+  if (pwm_value.BB_pwm < -255) {
+    pwm_value.BB_pwm = -255;
+  }
+
+  // // 如果PWM值为正，则设置电机正转，否则设置电机反转
+  // if (pwm > 0) {
+  //   digitalWrite(in3, HIGH);
+  //   digitalWrite(in4, LOW);
+  //   analogWrite(enB, pwm); // 输出PWM值给电机驱动
+  //   } else {
+  //   digitalWrite(in3, LOW);
+  //   digitalWrite(in4, HIGH);
+  //   analogWrite(enB, -pwm); // 输出PWM值给电机驱动
+  // }
+  // 重置编码器计数，为下一次测量做准备
+  encoder_value.FA_encoderCount = 0;
+  encoder_value.FB_encoderCount = 0;
+  encoder_value.BA_encoderCount = 0;
+  encoder_value.BB_encoderCount = 0;
+
+  return pwm_value;
 }
 
 // 编码器A相位中断函数，根据B相位的状态判断旋转方向，并增加或减少计数
@@ -254,12 +299,3 @@ void ISR_Encoder(char encoder) {
     }
   }
 }
-
-// 编码器B相位中断函数，根据A相位的状态判断旋转方向，并增加或减少计数
-// void ISR_EncoderB() {
-//   if (digitalRead(encoder_A) == HIGH) {
-//     encoderCount--;
-//   } else {
-//     encoderCount++;
-//   }
-// }
