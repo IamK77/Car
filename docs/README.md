@@ -19,21 +19,32 @@
 │   ├───README.md
 │   ├───...
 │   └───other.md
-└───Communication
-    ├───OpenCV
-    ├───...
-    └───PathPlanning
+├───Communication
+│   ├───OpenCV
+│   ├───...
+│   └───PathPlanning
+├───IMG
+│   ├───0.jpg
+│   ├───...
+│   └───3.jpg
+└───Lib
 ```
 
-## Arduino
+## [Arduino](../docs/MODULE/Arduino.md)
 
-用于控制各个元件
-
-如电机、机械臂、及显示屏
+本次项目中使用的Arduino为Arduino Mega 2560
 
 
-## Raspberry_Pi
+## [Raspberry_Pi](../docs/MODULE/Raspberry_Pi.md)
 
-用于进行计算
+本次项目中使用的Raspberry_Pi为Raspberry Pi 4B 4GB
 
-如运行Keras、A_Star
+## [Conclusion](../docs/Conclusion.md)
+
+项目总结
+
+## [TODO](../docs/TODO.md)
+
+项目计划
+
+## [UPDATE_LOG](../docs/UPDATE_LOG.md)

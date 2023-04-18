@@ -1,25 +1,35 @@
-#include <SoftwareSerial.h>
+//YWROBOT
+//Compatible with the Arduino IDE 1.0
+//Library version:1.1
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
 
-SoftwareSerial mySerial(2, 3); // RX, TX
-void setup(){
-   Serial.begin(9600);
- }
-char var;
-void loop(){
-   while(Serial.available()>0)//当有信号的时候
-   {
-     var=Serial.read();
-     
-    //  if(var=='0')//传过来的是0
-    //    digitalWrite(13,LOW);
-    //  if(var=='1')//传过来的是1
-    //    digitalWrite(13,HIGH);
-   }
+LiquidCrystal_I2C lcd(0x27,8,1);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+String message = ""; //定义接收数据的字符串
+bool received = false; //定义一个标志位，表示是否已经接收过字符串
+
+void setup() {
+  Serial.begin(9600); //初始化串口通信
+  lcd.init();                      // initialize the lcd 
+ 
+  // Print a message to the LCD.
+  lcd.backlight();
+  lcd.print("init");
 }
 
-// 假设你接收到了两个字节48和57
-byte b1 = 48;
-byte b2 = 57;
-// 把它们合并成一个整数
-int num = (b1 << 8) | b2;
-// num的值就是12345
+void lcd(){
+  if (Serial.available() > 0) { //当有可用数据时
+    if (!received) { //如果还没有接收过字符串
+      message = Serial.readString(); //读取一个字符串
+      received = true; //将标志位设为真
+    }
+    lcd.init();
+    lcd.print(message); //打印接收到的字符串
+    Serial.flush(); //清空缓冲区
+  }
+}
+
+void loop() {
+  
+}
+
