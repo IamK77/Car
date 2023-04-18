@@ -6,6 +6,10 @@ Arduino 是一款便捷灵活、方便上手的开源电子原型平台。包含
 
 在本次项目中，我们使用Arduino Mega 2560作为主控板，用于控制各个元件，如电机、显示屏。
 
+## 原理图
+
+![Arduino引脚](../../IMG/Arduino.jfif)
+
 ## Pin connections
 
 | Pin | Function |

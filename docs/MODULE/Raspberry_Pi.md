@@ -31,7 +31,7 @@ sudo reboot # 重启
 ## Solutions
 
 - 使用kernel自己编译64位系统或使用SSD作为boot盘 关闭不必要的服务 预计最多可缩短开机时间至5s
-- 插入Intel神经计算棒
+- 插入Intel神经计算棒，将Yolov5的.pt转换为.onnx, 再转换为IR中间格式，最后使用OpenVINO进行推理
 
 
 ## Camera
@@ -51,6 +51,8 @@ sudo reboot # 重启
 
 输出：置信度、坐标、类别
 
+将摄像头安装在机械臂上，居高临下对物料画面进行实时推理，获取位置，或许能达到最佳效果
+
 可视化效果如下
 ![rgb_scan](../../IMG/0.jpg)
 ![rgb_scan](../../IMG/1.jpg)
@@ -69,4 +71,8 @@ sudo reboot # 重启
 其他通信方法
 - I2C
 - esp8266 局域网通信(最佳)
+
+## 引脚图
+
+![pin](../../IMG/PI.png)
 
