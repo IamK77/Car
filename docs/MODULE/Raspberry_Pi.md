@@ -66,3 +66,7 @@ sudo reboot # 重启
 
 应使用GPIO中的RX TX进行通信
 
+其他通信方法
+- I2C
+- esp8266 局域网通信(最佳)
+
