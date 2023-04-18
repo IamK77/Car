@@ -13,6 +13,7 @@
  *        FA使用dirc 0  FB 1  BA 2  BB 3
  *TODO: 整合特殊方向的速度数组
  */
+<<<<<<< HEAD
 #define FAIN1 24   //右前电机a
 #define FAIN2 22
 #define FPWMA 2
@@ -38,6 +39,26 @@
 int FPwmA,FPwmB,BPwmA,BPwmB;
 double V;
 // {右前 左前 左后 右后}
+=======
+#define BAIN1 34
+#define BAIN2 32
+#define BBIN1 40
+#define BBIN2 39
+#define BPWMA 5
+#define BPWMB 9
+#define BSTBY 36
+#define FAIN1 28
+#define FAIN2 30
+#define FBIN1 24
+#define FBIN2 22
+#define FPWMA 10
+#define FPWMB 6
+#define FSTBY 26
+
+#define FORWARD {1, 0}
+#define BACKWARD {0, 1}
+// {左前 右前 右后 左后}
+>>>>>>> dev
 // 定义方向数组
 int forward[4][2] {FORWARD, FORWARD, FORWARD, FORWARD}; // 前进
 int backward[4][2] {BACKWARD, BACKWARD, BACKWARD, BACKWARD}; // 后退
@@ -47,11 +68,17 @@ int forward_left[4][2] {FORWARD, FORWARD, FORWARD, FORWARD}; // 左前方
 int forward_right[4][2] {FORWARD, FORWARD, FORWARD, BACKWARD}; // 右前方
 int backward_left[4][2] {BACKWARD, BACKWARD, BACKWARD, BACKWARD}; // 左后方
 int backward_right[4][2] {BACKWARD, BACKWARD, BACKWARD, BACKWARD}; // 右后方
+<<<<<<< HEAD
 int speed[4] = {51, 57, 56, 50};
 int speed_r[4] = {50, 50, 50, 50};
 int speed_A[4] = {255, 0, 255, 0};    //for forward_left and backward_right
 int speed_B[4] = {0, 255, 0, 255};    //for forward_right and backward_left
 
+=======
+int speed[4] = {255, 255, 255, 255};
+int speed_A[4] = {255, 0, 255, 0};    //for forward_left and backward_right
+int speed_B[4] = {0, 255, 0, 255};    //for forward_right and backward_left
+>>>>>>> dev
 // 
 void setup() {
   int pins[] = {BAIN1, BAIN2, BBIN1, BBIN2, BPWMA, BPWMB, BSTBY, FAIN1, FAIN2, FBIN1, FBIN2, FPWMA, FPWMB, FSTBY};
@@ -69,10 +96,17 @@ void move(int duration, int speed[4], int direction[4][2]) {
   analogWrite(BPWMA, speed[2]); //设置引脚BPWMA的PWM输出为speed[2]
   analogWrite(BPWMB, speed[3]); //设置引脚BPWMB的PWM输出为speed[3]
   digitalWrite(BSTBY, 1); //设置引脚BSTBY为高电平
+<<<<<<< HEAD
   digitalWrite(FAIN1, direction[0][1]);
   digitalWrite(FAIN2, direction[0][0]);
   digitalWrite(FBIN1, direction[1][1]);
   digitalWrite(FBIN2, direction[1][0]);
+=======
+  digitalWrite(FAIN1, direction[0][0]);
+  digitalWrite(FAIN2, direction[0][1]);
+  digitalWrite(FBIN1, direction[1][0]);
+  digitalWrite(FBIN2, direction[1][1]);
+>>>>>>> dev
   analogWrite(FPWMA, speed[0]); //设置引脚FPWMA的PWM输出为speed[0]
   analogWrite(FPWMB, speed[1]); //设置引脚FPWMB的PWM输出为speed[1]
   digitalWrite(FSTBY, 1); //设置引脚FSTBY为高电平

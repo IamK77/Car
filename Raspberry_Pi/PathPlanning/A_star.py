@@ -89,6 +89,7 @@ class Dijkstra:
 
         rx, ry = self.calc_final_path(goal_node, closed_set)
         plt.plot(rx, ry, "-r")
+        print(rx, ry)
         # return rx, ry
 
     def calc_final_path(self, goal_node, closed_set):  # 最终路径
@@ -178,11 +179,11 @@ class Dijkstra:
         motion = [[1, 0, 1],  # 运动模式  列表(数组)内
                   [0, 1, 1],  # 第一个值为x方向 1: 向右    -1: 向左         0  1  0    由1移动到2为向下移动, 因此为[0, -1, 1]
                   [-1, 0, 1],  # 第二个值为y方向 1: 向上    -1: 向下        0  2  0    要跨过1个距离, 所以权重是1
-                  [0, -1, 1],  # 第三个值为权重(代价)                      0  0  3    2到3同理[1, -1, math.sqrt(2)]
-                  [-1, -1, math.sqrt(2)],
-                  [-1, 1, math.sqrt(2)],
-                  [1, -1, math.sqrt(2)],
-                  [1, 1, math.sqrt(2)]]
+                  [0, -1, 1],]  # 第三个值为权重(代价)                      0  0  3    2到3同理[1, -1, math.sqrt(2)]
+                #   [-1, -1, math.sqrt(2)],
+                #   [-1, 1, math.sqrt(2)],
+                #   [1, -1, math.sqrt(2)],
+                #   [1, 1, math.sqrt(2)]]
 
         return motion
 
@@ -255,7 +256,7 @@ def draw():
     gx = 230.0  # 终点
     gy = 10.0
     grid_size = 5.0  # 节点(栅格)尺寸
-    robot_radius = 15.0
+    robot_radius = 5.0
 
     ox, oy = [], []
     to_ox, to_oy = map_rectangle(240, 0)
