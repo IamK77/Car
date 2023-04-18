@@ -52,10 +52,10 @@ sudo reboot # 重启
 输出：置信度、坐标、类别
 
 可视化效果如下
-![rgb_scan](../IMG/0.jpg)
-![rgb_scan](../IMG/1.jpg)
-![rgb_scan](../IMG/2.jpg)
-![rgb_scan](../IMG/3.jpg)
+![rgb_scan](../../IMG/0.jpg)
+![rgb_scan](../../IMG/1.jpg)
+![rgb_scan](../../IMG/2.jpg)
+![rgb_scan](../../IMG/3.jpg)
 
 
 ## Communicatiy with Arduino
